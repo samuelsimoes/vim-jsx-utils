@@ -1,0 +1,82 @@
+Before (set the identation):
+  let &shiftwidth = 2
+  let &expandtab = 1
+Given jsx (children component):
+  class Foo extends React {
+    render () {
+      return (
+        <p someAttribute="bar">
+          <SelfCloseComponent
+            singleQuote='foo'
+            doubleQuote="bar"
+            children={<Foo />}
+            options={{ foo: "bar" }}
+            arrowFunction={value => this.setState({ myState: value })}/>
+        </p>
+      );
+    }
+  }
+Do (invoke the command on the children component start line):
+  4j
+  :call JSXExtractPartial('partial')\<CR>
+Expect (replace the children component with a partial function):
+  class Foo extends React {
+    render () {
+      return (
+        <p someAttribute="bar">
+          {this.partial()}
+        </p>
+      );
+    }
+
+    partial () {
+      return (
+        <SelfCloseComponent
+          singleQuote='foo'
+          doubleQuote="bar"
+          children={<Foo />}
+          options={{ foo: "bar" }}
+          arrowFunction={value => this.setState({ myState: value })}/>
+      );
+    }
+  }
+
+Given jsx (not self close tag with self close tag children):
+  class Foo extends React {
+    render () {
+      return (
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              onChange={evt => this.setState({ check: evt.target.checked })}/>
+            My checkbox
+          </label>
+        </div>
+      );
+    }
+  }
+Do (invoke the command on the children component start line):
+  4j
+  :call JSXExtractPartial('partial')\<CR>
+Expect (children component is extracted):
+  class Foo extends React {
+    render () {
+      return (
+        <div>
+          {this.partial()}
+        </div>
+      );
+    }
+
+    partial () {
+      return (
+        <label>
+          <input
+            type="checkbox"
+            onChange={evt => this.setState({ check: evt.target.checked })}/>
+          My checkbox
+        </label>
+      );
+    }
+  }

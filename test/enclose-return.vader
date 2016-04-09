@@ -1,0 +1,52 @@
+Before (set the identation):
+  let &shiftwidth = 2
+  let &expandtab = 1
+Given jsx (self close component):
+  class Foo extends React {
+    render () {
+      <SelfCloseComponent
+        singleQuote='foo'
+        doubleQuote="bar"
+        children={<Foo />}
+        options={{ foo: "bar" }}
+        arrowFunction={value => this.setState({ myState: value })}/>
+    }
+  }
+Do (invoke the command on the component start line):
+  2j
+  :call JSXEncloseReturn()\<CR>
+Expect (the component will be wrapped on a return):
+  class Foo extends React {
+    render () {
+      return (
+        <SelfCloseComponent
+          singleQuote='foo'
+          doubleQuote="bar"
+          children={<Foo />}
+          options={{ foo: "bar" }}
+          arrowFunction={value => this.setState({ myState: value })}/>
+      );
+    }
+  }
+
+Given jsx (not self close component with children):
+  class Foo extends React {
+    render () {
+      <p someAttribute="bar">
+        <SelfCloseComponent/>
+      </p>
+    }
+  }
+Do (invoke the command on the component start line):
+  2j
+  :call JSXEncloseReturn()\<CR>
+Expect (not self close tag will be wrapped on return):
+  class Foo extends React {
+    render () {
+      return (
+        <p someAttribute="bar">
+          <SelfCloseComponent/>
+        </p>
+      );
+    }
+  }
