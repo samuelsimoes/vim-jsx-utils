@@ -23,6 +23,8 @@ You can install this plugin with [Pathogen](https://github.com/tpope/vim-pathoge
 ![](examples/eachline-vim.gif)
 
 ###JSXExtractPartialPrompt
+:warning: Only ES6 classes
+
 ![](examples/partial-vim.gif)
 
 -------
