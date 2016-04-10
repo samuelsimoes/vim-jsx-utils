@@ -1,7 +1,7 @@
 function! JSXSelectTag()
-  let l:line_number = line('.')
-  let l:line = getline('.')
-  let l:tag_name = matchstr(matchstr(line, '<\w\+'), '\w\+')
+  let l:line_number = line(".")
+  let l:line = getline(".")
+  let l:tag_name = matchstr(matchstr(line, "<\\w\\+"), "\\w\\+")
 
   exec "normal! 0f<vat\<esc>"
 
@@ -9,7 +9,7 @@ function! JSXSelectTag()
 
   let l:selected_text = join(getline(getpos("'<")[1], getpos("'>")[1]))
 
-  let l:match_tag = matchstr(matchstr(selected_text, '</\w\+>*$'), '\w\+')
+  let l:match_tag = matchstr(matchstr(selected_text, "</\\w\\+>*$"), "\\w\\+")
 
   let l:self_close_element = (tag_name != match_tag)
 
@@ -28,10 +28,10 @@ endfunction
 "   );
 function! JSXEncloseReturn()
   let l:previous_q_reg = @q
-  let l:tab = &expandtab ? repeat(' ', &shiftwidth) : '\t'
-  let l:line = getline('.')
-  let l:line_number = line('.')
-  let l:distance = len(matchstr(line, '^[\t|\ ]*'))
+  let l:tab = &expandtab ? repeat(" ", &shiftwidth) : "\t"
+  let l:line = getline(".")
+  let l:line_number = line(".")
+  let l:distance = len(matchstr(line, "^\[\\t|\\ \]*"))
   if &expandtab
     let l:distance = (distance / &shiftwidth)
   endif
@@ -39,7 +39,7 @@ function! JSXEncloseReturn()
   call JSXSelectTag()
   exec "normal! \"qc"
 
-  let @q = repeat(tab, distance) . "return (\n" . repeat(tab, distance + 1) . substitute(getreg('q'), '\n', ('\n' . tab), 'g') .  "\n" . repeat(tab, distance) . ");\n"
+  let @q = repeat(tab, distance) . "return (\n" . repeat(tab, distance + 1) . substitute(getreg("q"), "\\n", ("\\n" . tab), "g") .  "\n" . repeat(tab, distance) . ");\n"
 
   exec "normal! dd\"qP"
 
@@ -49,7 +49,7 @@ endfunction
 " extract some JSX component's node to a dedicated render function (only ES6
 " class)
 function! JSXExtractPartialPrompt()
-  let l:func_name = input('Function name: ')
+  let l:func_name = input("Function name: ")
   if !len(func_name)
     return
   endif
@@ -58,10 +58,10 @@ endfunction
 
 function! JSXExtractPartial(partial_name)
   let l:previous_q_reg = @q
-  let l:line = getline('.')
-  let l:line_number = line('.')
-  let l:tab = &expandtab ? repeat(' ', &shiftwidth) : '\t'
-  let l:distance = len(matchstr(line, '^[\t|\ ]*'))
+  let l:line = getline(".")
+  let l:line_number = line(".")
+  let l:tab = &expandtab ? repeat(" ", &shiftwidth) : "\t"
+  let l:distance = len(matchstr(line, "^\[\\t|\\ \]*"))
   if &expandtab
     let l:distance = (distance / &shiftwidth)
   endif
@@ -72,7 +72,7 @@ function! JSXExtractPartial(partial_name)
   " Fix identation
   if distance > 3
     let l:distance = (distance - 3)
-    let @q = substitute(getreg('q'), ('\n' . repeat(tab, distance)), '\n', 'g')
+    let @q = substitute(getreg("q"), ("\\n" . repeat(tab, distance)), "\\n", "g")
   endif
 
   exec '/^[\t|\ ]*}$'
@@ -90,19 +90,19 @@ endfunction
 function! JSXEachAttributeInLine()
   let l:previous_q_reg = @q
   let l:line = getline(".")
-  let l:identation_length = len(matchstr(line, '^[\t|\ ]*'))
+  let l:identation_length = len(matchstr(line, "^\[\\t|\\ \]*"))
 
   if &expandtab
-    let l:padding = repeat(' ', (identation_length + &shiftwidth))
+    let l:padding = repeat(" ", (identation_length + &shiftwidth))
   else
-    let l:padding = repeat('\t', identation_length + 1)
+    let l:padding = repeat("\t", identation_length + 1)
   endif
 
   let @q = substitute(line, "\\w\\+=[{|'|\"]", "\\n" . padding . "&", "g")
 
   let @q = substitute(getreg("q"), "\ \\n", "\\n", "g")
 
-  execute 'normal! 0d$"qp'
+  execute "normal! 0d$\"qp"
 
   let @q = previous_q_reg
 endfunction
