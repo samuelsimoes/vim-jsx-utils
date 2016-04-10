@@ -7,6 +7,7 @@ Plugin with some utilities to folks who work with **[JSX](https://facebook.githu
 nnoremap <leader>ja :call JSXEncloseReturn()<CR>
 nnoremap <leader>ji :call JSXEachAttributeInLine()<CR>
 nnoremap <leader>je :call JSXExtractPartialPrompt()<CR>
+nnoremap vat :call JSXSelectTag()<CR>
 ```
 
 :warning: All functions must be invoked on the first component line.
@@ -15,6 +16,9 @@ nnoremap <leader>je :call JSXExtractPartialPrompt()<CR>
 You can install this plugin with [Pathogen](https://github.com/tpope/vim-pathogen), [Vundle](https://github.com/VundleVim/Vundle.vim) and other plugin loaders.
 
 ##Functions
+
+###JSXSelectTag
+Select the whole tag, like `vat`, but with a little improvement to select self-closing tags.
 
 ###JSXEncloseReturn
 ![](examples/enclose-vim.gif)

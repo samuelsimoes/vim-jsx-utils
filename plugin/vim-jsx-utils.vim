@@ -1,3 +1,25 @@
+function! JSXSelectTag()
+  let l:line_number = line('.')
+  let l:line = getline('.')
+  let l:tag_name = matchstr(matchstr(line, '<\w\+'), '\w\+')
+
+  exec "normal! 0f<vat\<esc>"
+
+  cal cursor(line_number, 1)
+
+  let l:selected_text = join(getline(getpos("'<")[1], getpos("'>")[1]))
+
+  let l:match_tag = matchstr(matchstr(selected_text, '</\w\+>*$'), '\w\+')
+
+  let l:self_close_element = (tag_name != match_tag)
+
+  if self_close_element
+    exec "normal! \<esc>0f<v/\\/>$\<cr>l"
+  else
+    exec "normal! \<esc>0f<vat"
+  end
+endfunction
+
 " transform this:
 "   <p>Hello</p>
 " into this:
@@ -9,28 +31,13 @@ function! JSXEncloseReturn()
   let l:tab = &expandtab ? repeat(' ', &shiftwidth) : '\t'
   let l:line = getline('.')
   let l:line_number = line('.')
-  let l:tag_name = matchstr(matchstr(line, '<\w\+'), '\w\+')
-
-  " put on reg the possible tag content
-  exec "normal! 0f<vat\"qy"
-
-  let l:match_tag = matchstr(matchstr(getreg('q'), '</\w\+>*$'), '\w\+')
-
-  let l:self_close_element = (tag_name != match_tag)
-
   let l:distance = len(matchstr(line, '^[\t|\ ]*'))
-
-  cal cursor(line_number, 1)
-
   if &expandtab
     let l:distance = (distance / &shiftwidth)
   endif
 
-  if self_close_element
-    exec "normal! \<esc>0f<v/\\/>$\<cr>l\"qd"
-  else
-    exec "normal! \<esc>0f<\"qcat"
-  end
+  call JSXSelectTag()
+  exec "normal! \"qc"
 
   let @q = repeat(tab, distance) . "return (\n" . repeat(tab, distance + 1) . substitute(getreg('q'), '\n', ('\n' . tab), 'g') .  "\n" . repeat(tab, distance) . ");\n"
 
@@ -50,34 +57,19 @@ function! JSXExtractPartialPrompt()
 endfunction
 
 function! JSXExtractPartial(partial_name)
-  let previous_q_reg = @q
+  let l:previous_q_reg = @q
   let l:line = getline('.')
   let l:line_number = line('.')
-  let l:tag_name = matchstr(matchstr(line, '<\w\+'), '\w\+')
   let l:tab = &expandtab ? repeat(' ', &shiftwidth) : '\t'
-
-  " put on reg the possible tag content
-  exec "normal! 0f<vat\"qy"
-
-  let l:match_tag = matchstr(matchstr(getreg('q'), '</\w\+>*$'), '\w\+')
-
-  let l:self_close_element = (tag_name != match_tag)
-
-  cal cursor(line_number, 1)
-
-  if self_close_element
-    exec "normal! f<v/\\/>$\<cr>l\"qc{this." . a:partial_name . "()}"
-  else
-    exec 'normal! f<vat"qc{this.' . a:partial_name . '()}'
-  end
-
-  " Fix identation
   let l:distance = len(matchstr(line, '^[\t|\ ]*'))
-
   if &expandtab
     let l:distance = (distance / &shiftwidth)
   endif
 
+  call JSXSelectTag()
+  exec "normal! \"qc{this." . a:partial_name . "()}"
+
+  " Fix identation
   if distance > 3
     let l:distance = (distance - 3)
     let @q = substitute(getreg('q'), ('\n' . repeat(tab, distance)), '\n', 'g')
