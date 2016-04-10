@@ -21,13 +21,19 @@ You can install this plugin with [Pathogen](https://github.com/tpope/vim-pathoge
 Select the whole tag, like `vat`, but with a little improvement to select self-closing tags.
 
 ###JSXEncloseReturn
+Put the current tag on a return statement with parenthesis.
+
 ![](examples/enclose-vim.gif)
 
 ###JSXEachAttributeInLine
+Put each tag attribute's on its own line to better readability.
+
 ![](examples/eachline-vim.gif)
 
 ###JSXExtractPartialPrompt
 :warning: Only ES6 classes
+
+Extract some tag on its own method on a ES6 class.
 
 ![](examples/partial-vim.gif)
 
