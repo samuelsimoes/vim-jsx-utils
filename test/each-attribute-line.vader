@@ -1,7 +1,7 @@
 Before (set the identation):
   let &shiftwidth = 2
   let &expandtab = 1
-Given jsx (children component):
+Given jsx (self close component):
   class Foo extends React {
     render () {
       return (
@@ -9,10 +9,10 @@ Given jsx (children component):
       );
     }
   }
-Do (invoke the command on the children component start line):
+Do (invoke the command on the component start line):
   3j
   :call JSXEachAttributeInLine()\<CR>
-Expect (replace the children component with a partial function):
+Expect (put every attribute on its own line):
   class Foo extends React {
     render () {
       return (
@@ -22,6 +22,35 @@ Expect (replace the children component with a partial function):
           children={<Foo />}
           options={{ foo: "bar" }}
           arrowFunction={value => this.setState({ myState: value })}/>
+      );
+    }
+  }
+Given jsx (not self closing element):
+  class Foo extends React {
+    render () {
+      return (
+        <SelfCloseComponent singleQuote='foo' doubleQuote="bar">
+          <p fooAttribute="foo" barAttribute="bar">
+            Hi
+          </p>
+        </SelfCloseComponent>
+      );
+    }
+  }
+Do (invoke the command on the component start line):
+  3j
+  :call JSXEachAttributeInLine()\<CR>
+Expect (put every attribute on its own line):
+  class Foo extends React {
+    render () {
+      return (
+        <SelfCloseComponent
+          singleQuote='foo'
+          doubleQuote="bar">
+          <p fooAttribute="foo" barAttribute="bar">
+            Hi
+          </p>
+        </SelfCloseComponent>
       );
     }
   }
