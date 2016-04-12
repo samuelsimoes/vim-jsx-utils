@@ -1,4 +1,4 @@
-function! JSXSelectTag()
+function! JSXIsSelfCloseTag()
   let l:line_number = line(".")
   let l:line = getline(".")
   let l:tag_name = matchstr(matchstr(line, "<\\w\\+"), "\\w\\+")
@@ -11,9 +11,11 @@ function! JSXSelectTag()
 
   let l:match_tag = matchstr(matchstr(selected_text, "</\\w\\+>*$"), "\\w\\+")
 
-  let l:self_close_element = (tag_name != match_tag)
+  return tag_name != match_tag
+endfunction
 
-  if self_close_element
+function! JSXSelectTag()
+  if JSXIsSelfCloseTag()
     exec "normal! \<esc>0f<v/\\/>$\<cr>l"
   else
     exec "normal! \<esc>0f<vat"
@@ -105,4 +107,32 @@ function! JSXEachAttributeInLine()
   execute "normal! 0d$\"qp"
 
   let @q = previous_q_reg
+endfunction
+
+function! JSXChangeTag(new_tag)
+  let l:previous_q_reg = @q
+  let l:self_close_tag = JSXIsSelfCloseTag()
+
+  call JSXSelectTag()
+
+  normal! "qd
+
+  if self_close_tag
+    let @q = substitute(getreg("q"), "^<\\w\\+", ("<" . a:new_tag), "g")
+  else
+    let @q = substitute(getreg("q"), "^<\\w\\+", ('<' . a:new_tag), "g")
+    let @q = substitute(getreg("q"), "\\w\\+>$", (a:new_tag . '>'), "g")
+  end
+
+  normal "qp
+
+  let @q = previous_q_reg
+endfunction
+
+function! JSXChangeTagPrompt()
+  let l:tag_name = input("New tag name: ")
+  if !len(tag_name)
+    return
+  endif
+  call JSXChangeTag(tag_name)
 endfunction

@@ -7,6 +7,7 @@ Plugin with some utilities to folks who work with **[JSX](https://facebook.githu
 nnoremap <leader>ja :call JSXEncloseReturn()<CR>
 nnoremap <leader>ji :call JSXEachAttributeInLine()<CR>
 nnoremap <leader>je :call JSXExtractPartialPrompt()<CR>
+nnoremap <leader>jc :call JSXChangeTagPrompt()<CR>
 nnoremap vat :call JSXSelectTag()<CR>
 ```
 
@@ -36,6 +37,12 @@ Put each tag attribute's on its own line to better readability.
 Extract some tag on its own method on a ES6 class.
 
 ![](examples/partial-vim.gif)
+
+###JSXChangeTagPrompt
+
+Change the tag name
+
+![](examples/change-vim.gif)
 
 -------
 Samuel Simões ~ [@samuelsimoes](https://twitter.com/samuelsimoes) ~ [Blog](http://blog.samuelsimoes.com/)

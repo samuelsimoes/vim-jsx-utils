@@ -1,0 +1,23 @@
+Before (set the identation):
+  let &shiftwidth = 2
+  let &expandtab = 1
+Given jsx:
+  <SelfCloseComponent doubleQuote="bar"/>
+Do:
+  :call JSXChangeTag('FooBar')\<CR>
+Expect:
+  <FooBar doubleQuote="bar"/>
+Given jsx:
+  <div
+    attribute="second-line">
+    <div>Inner div</div>
+    <SelfCloseElement/>
+  </div>
+Do:
+  :call JSXChangeTag('FooBar')\<CR>
+Expect:
+  <FooBar
+    attribute="second-line">
+    <div>Inner div</div>
+    <SelfCloseElement/>
+  </FooBar>
