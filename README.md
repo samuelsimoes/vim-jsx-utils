@@ -1,4 +1,4 @@
-#vim-jsx-utils
+# vim-jsx-utils
 Plugin with some utilities to folks who work with **[JSX](https://facebook.github.io/jsx/)** on Vim.
 
 :warning: This plugin only expose a [set of functions](#functions). You need create your own mappings to this, like:
@@ -13,32 +13,32 @@ nnoremap vat :call JSXSelectTag()<CR>
 
 :warning: All functions must be invoked on the first component line.
 
-##Installation
+## Installation
 You can install this plugin with [Pathogen](https://github.com/tpope/vim-pathogen), [Vundle](https://github.com/VundleVim/Vundle.vim) and other plugin loaders.
 
-##Functions
+## Functions
 
-###JSXSelectTag
+### JSXSelectTag
 Select the whole tag, like `vat`, but with a little improvement to select self-closing tags.
 
-###JSXEncloseReturn
+### JSXEncloseReturn
 Put the current tag on a return statement with parenthesis.
 
 ![](examples/enclose-vim.gif)
 
-###JSXEachAttributeInLine
+### JSXEachAttributeInLine
 Put each tag attribute's on its own line to better readability.
 
 ![](examples/eachline-vim.gif)
 
-###JSXExtractPartialPrompt
+### JSXExtractPartialPrompt
 :warning: Only ES6 classes
 
 Extract some tag on its own method on a ES6 class.
 
 ![](examples/partial-vim.gif)
 
-###JSXChangeTagPrompt
+### JSXChangeTagPrompt
 
 Change the tag name
 
